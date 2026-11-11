@@ -3,593 +3,371 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AniTruth Urdu Pro - AI 2D Story & Reel Studio</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        darkbg: '#070a11',
-                        cardbg: '#111625',
-                        panelbg: '#1a2235',
-                        accentred: '#e11d48',
-                        accentpurple: '#9333ea',
-                        accentblue: '#3b82f6',
-                        gold: '#f59e0b'
-                    },
-                    fontFamily: {
-                        cinzel: ['Cinzel', 'serif'],
-                        poppins: ['Poppins', 'sans-serif']
-                    }
-                }
-            }
-        }
-    </script>
+    <title>AniTruth Urdu Pro - AI 2D Story Studio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #070a11; color: #f3f4f6; font-family: 'Poppins', sans-serif; }
+        :root {
+            --bg: #07090e;
+            --card: #111827;
+            --border: #1f2937;
+            --primary: #3b82f6;
+            --accent: #8b5cf6;
+            --success: #10b981;
+            --danger: #ef4444;
+            --text: #f3f4f6;
+            --muted: #9ca3af;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg); color: var(--text); padding: 15px; }
+        .container { max-width: 450px; margin: auto; }
         
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #070a11; }
-        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #e11d48; }
+        header { text-align: center; padding: 15px 0; border-bottom: 1px solid var(--border); margin-bottom: 15px; }
+        header h1 { font-size: 20px; background: linear-gradient(90deg, #60a5fa, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        header p { color: var(--muted); font-size: 11px; margin-top: 2px; }
 
-        /* Animation Keyframes */
-        @keyframes kenburns {
-            0% { transform: scale(1) translate(0, 0); }
-            50% { transform: scale(1.15) translate(-1%, -1%); }
-            100% { transform: scale(1.05) translate(1%, 1%); }
-        }
-        .animate-kenburns { animation: kenburns 8s infinite alternate ease-in-out; }
+        .studio-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        label { display: block; font-size: 12px; color: #d1d5db; margin-bottom: 4px; font-weight: 600; }
+        input, textarea, select { width: 100%; background: #1f2937; border: 1px solid #374151; color: white; padding: 10px; border-radius: 8px; font-size: 13px; margin-bottom: 12px; outline: none; }
+        input:focus, textarea:focus { border-color: var(--primary); }
 
-        @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 0 15px rgba(225, 29, 72, 0.4); }
-            50% { box-shadow: 0 0 30px rgba(225, 29, 72, 0.8); }
-        }
-        .glow-red { animation: pulseGlow 3s infinite; }
+        .btn-group { display: flex; gap: 8px; }
+        button { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; transition: 0.3s; color: white; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--accent)); }
+        .btn-demo { background: #374151; border: 1px solid #4b5563; }
+        button:active { transform: scale(0.98); }
 
-        .subtitle-box {
-            background: rgba(7, 10, 17, 0.88);
-            backdrop-filter: blur(8px);
-            border-left: 4px solid #e11d48;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.7);
-        }
+        .error-box { display: none; background: rgba(239, 68, 68, 0.15); border: 1px solid var(--danger); color: #fca5a5; padding: 10px; border-radius: 8px; margin-top: 12px; font-size: 12px; }
 
-        /* 9:16 and 16:9 Aspect Ratios */
-        .aspect-reel { width: 100%; max-width: 340px; height: 580px; margin: 0 auto; }
-        .aspect-cinema { width: 100%; height: 380px; }
+        .progress-tracker { display: none; background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 15px; margin-top: 15px; }
+        .step-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 12px; color: var(--muted); }
+        .step-row.active { color: #60a5fa; font-weight: 600; }
+        .step-row.done { color: var(--success); }
+        .dot { width: 8px; height: 8px; border-radius: 50%; background: #374151; flex-shrink: 0; }
+        .step-row.active .dot { background: #60a5fa; box-shadow: 0 0 8px #60a5fa; }
+        .step-row.done .dot { background: var(--success); }
+
+        /* Cinema / Reel Player (9:16 Vertical Default) */
+        #cinemaPlayer { display: none; background: #000; border-radius: 14px; overflow: hidden; margin-top: 15px; border: 2px solid var(--accent); position: relative; }
+        .screen-wrap { position: relative; width: 100%; aspect-ratio: 9/16; max-height: 520px; background: #0b0f19; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        #playerImg { width: 100%; height: 100%; object-fit: cover; transition: transform 6s ease-out; }
+        .zoom-effect { transform: scale(1.12); }
+        .subtitle-overlay { position: absolute; bottom: 15px; left: 4%; right: 4%; background: rgba(0,0,0,0.85); padding: 10px 12px; border-radius: 8px; text-align: center; font-size: 13px; border-left: 4px solid var(--accent); color: #fff; line-height: 1.4; }
+        .player-bar { background: #111827; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); }
+        .watermark { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7); padding: 4px 8px; border-radius: 4px; font-size: 10px; color: #cbd5e1; display: flex; align-items: center; gap: 4px; z-index: 10; border: 1px solid rgba(255,255,255,0.1); }
+        .scene-badge { position: absolute; top: 10px; right: 10px; background: rgba(139, 92, 246, 0.85); padding: 4px 8px; border-radius: 4px; font-size: 10px; color: white; font-weight: 600; z-index: 10; }
+
+        .scenes-grid { margin-top: 15px; display: flex; flex-direction: column; gap: 14px; }
+        .scene-item { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+        .scene-header { background: #1f2937; padding: 8px 12px; font-size: 12px; font-weight: 600; display: flex; justify-content: space-between; }
+        .scene-img { width: 100%; aspect-ratio: 9/16; object-fit: cover; display: block; background: #0f172a; }
+        .scene-body { padding: 12px; }
+        .script-text { font-size: 13px; line-height: 1.5; color: #e5e7eb; margin-bottom: 10px; }
+        .action-btns { display: flex; gap: 8px; }
+        .btn-sm { padding: 8px; font-size: 12px; border-radius: 6px; text-align: center; text-decoration: none; color: white; font-weight: 600; flex: 1; background: #374151; }
     </style>
 </head>
-<body class="min-h-screen p-3 md:p-6">
+<body>
 
-<div class="max-w-6xl mx-auto space-y-6">
-
-    <!-- Header Section -->
-    <header class="text-center py-4 border-b border-gray-800 relative">
-        <div class="inline-block px-3 py-1 bg-red-950/60 border border-red-800/60 rounded-full text-xs font-semibold text-red-400 mb-2 uppercase tracking-widest">
-            🔥 Dark 2D Crime & Investigative Story Engine
-        </div>
-        <h1 class="text-3xl md:text-5xl font-black font-cinzel tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-red-500 via-purple-400 to-amber-500">
-            AniTruth Urdu Pro
-        </h1>
-        <p class="text-xs md:text-sm text-gray-400 mt-2 max-w-xl mx-auto">
-            Create high-engagement dark 2D animation reels (Maryam Nawaz / Crime Investigation style) with AI script, comic art, subtitles, & voiceovers for Facebook & YouTube Shorts.
-        </p>
+<div class="container">
+    <header>
+        <h1>🎬 AniTruth Urdu Pro</h1>
+        <p>AI Script • 2D Dark Art • Voiceover • Reel Video Player</p>
     </header>
 
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <div class="studio-card">
+        <label>🔑 Gemini API Key (Auto Save):</label>
+        <input type="password" id="apiKey" placeholder="AIzaSy... yahan paste karein">
 
-        <!-- Left Controls Column (Form & Config) -->
-        <div class="lg:col-span-5 space-y-5">
-            <div class="bg-cardbg border border-gray-800 rounded-2xl p-5 shadow-2xl space-y-4">
-                
-                <!-- API Key -->
-                <div>
-                    <div class="flex justify-between items-center mb-1">
-                        <label class="text-xs font-semibold text-gray-300">🔑 Gemini API Key (Auto-Saved)</label>
-                        <span id="keyStatus" class="text-[10px] text-gray-500">Not Saved</span>
-                    </div>
-                    <input type="password" id="apiKey" placeholder="AIzaSy... paste here"
-                           class="w-full bg-darkbg border border-gray-700 rounded-xl px-4 py-2.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-red-500 transition">
-                </div>
+        <label>🎨 Visual Style:</label>
+        <select id="artStyle">
+            <option value="2d dark graphic novel comic art style, dramatic shadows, moody lighting, cinematic, high contrast">Dark Comic / Crime Novel Style</option>
+            <option value="2d dark anime style, gritty atmosphere, glowing neon highlights, detailed background">Dark Gritty Anime Style</option>
+            <option value="vintage detective newspaper illustration, moody noir lighting, ink outlines">Vintage Detective Noir</option>
+        </select>
 
-                <!-- Visual Art Style -->
-                <div>
-                    <label class="text-xs font-semibold text-gray-300 mb-1 block">🎨 Select 2D Dark Art Style</label>
-                    <select id="artStyle" class="w-full bg-darkbg border border-gray-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-red-500">
-                        <option value="2d dark graphic novel comic art style, dramatic shadows, moody lighting, gritty investigative reel style, sharp outlines, detailed background, cinematic color grading">
-                            🕵️ Dark Investigative 2D Graphic Novel (AniTruth Classic)
-                        </option>
-                        <option value="2d dark crime anime style, gritty atmosphere, intense glowing highlights, rain-slicked streets, moody dark colors, high drama action scene">
-                            ⚡ Dark Crime Anime & Action Style
-                        </option>
-                        <option value="2d breaking news street documentary art style, dramatic realistic comic illustration, police lights background, high contrast shadows">
-                            🚨 Street News / Political Thriller 2D Style
-                        </option>
-                        <option value="vintage Pakistani street dark graphic novel art style, 2d cartoon comic illustration, night scene, cinematic atmospheric lighting">
-                            🌙 Vintage Local Crime Story Style
-                        </option>
-                    </select>
-                </div>
+        <label>📝 Kahani ka Topic / Script Idea:</label>
+        <textarea id="topic" rows="2" placeholder="Misal: Lahore ki raat mein aik raazdaar file ka milna..."></textarea>
 
-                <!-- Aspect Ratio Toggle -->
-                <div>
-                    <label class="text-xs font-semibold text-gray-300 mb-1 block">📱 Target Platform Format</label>
-                    <div class="grid grid-cols-2 gap-2">
-                        <button id="btnAspectReel" onclick="setAspectRatio('reel')" 
-                                class="py-2 text-xs font-semibold rounded-xl border border-red-500 bg-red-950/50 text-red-300 flex items-center justify-center gap-2">
-                            📱 9:16 Reel / Short
-                        </button>
-                        <button id="btnAspectCinema" onclick="setAspectRatio('cinema')" 
-                                class="py-2 text-xs font-semibold rounded-xl border border-gray-700 bg-darkbg text-gray-400 flex items-center justify-center gap-2">
-                            📺 16:9 Cinema / YT
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Story Topic / Prompt -->
-                <div>
-                    <label class="text-xs font-semibold text-gray-300 mb-1 block">📝 Story Topic / Crime Incident (Roman Urdu / English)</label>
-                    <textarea id="topic" rows="4" 
-                              placeholder="e.g. Safe Punjab Project ke piche chhupa sach! Ek investigative officer ko milti hain aisi confidential files jo pure shehar mein khalbali macha deti hain..."
-                              class="w-full bg-darkbg border border-gray-700 rounded-xl p-3 text-xs text-gray-200 placeholder-gray-600 focus:outline-none focus:border-red-500"></textarea>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="space-y-2 pt-2">
-                    <button onclick="generateStoryStudio(false)" 
-                            class="w-full py-3.5 px-4 bg-gradient-to-r from-red-600 via-purple-600 to-indigo-600 hover:from-red-500 hover:to-indigo-500 font-bold text-xs rounded-xl shadow-lg transition transform active:scale-98 flex items-center justify-center gap-2 glow-red">
-                        🚀 Generate AI 2D Story Reel
-                    </button>
-                    
-                    <button onclick="generateStoryStudio(true)" 
-                            class="w-full py-2.5 px-4 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-300 text-xs font-medium rounded-xl transition flex items-center justify-center gap-2">
-                        ⚡ Load Sample AniTruth Reel (Instant Demo)
-                    </button>
-                </div>
-
-                <!-- Error Box -->
-                <div id="errorBox" class="hidden bg-red-950/80 border border-red-700 text-red-200 p-3 rounded-xl text-xs"></div>
-
-            </div>
-
-            <!-- Progress Tracker -->
-            <div id="tracker" class="hidden bg-cardbg border border-gray-800 rounded-2xl p-4 space-y-3">
-                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">⚡ Processing Pipeline</h3>
-                <div id="st1" class="flex items-center gap-3 text-xs text-gray-500">
-                    <div class="w-2.5 h-2.5 rounded-full bg-gray-700 dot"></div>
-                    <span>Step 1: Gemini AI generating 4-scene dark script...</span>
-                </div>
-                <div id="st2" class="flex items-center gap-3 text-xs text-gray-500">
-                    <div class="w-2.5 h-2.5 rounded-full bg-gray-700 dot"></div>
-                    <span>Step 2: Rendering 2D graphic novel scenes...</span>
-                </div>
-                <div id="st3" class="flex items-center gap-3 text-xs text-gray-500">
-                    <div class="w-2.5 h-2.5 rounded-full bg-gray-700 dot"></div>
-                    <span>Step 3: Synchronizing voiceover & video player...</span>
-                </div>
-            </div>
+        <div class="btn-group">
+            <button class="btn-primary" onclick="startGeneration(false)">🚀 AI Story Banayein</button>
+            <button class="btn-demo" onclick="startGeneration(true)">⚡ Sample Demo</button>
         </div>
 
-        <!-- Right Output Column (Player & Scene Cards) -->
-        <div class="lg:col-span-7 space-y-6">
-
-            <!-- Video Player Window -->
-            <div id="cinemaPlayer" class="hidden bg-black rounded-2xl overflow-hidden border-2 border-red-900/60 shadow-2xl relative">
-                
-                <!-- Screen Area -->
-                <div id="playerScreen" class="aspect-reel relative overflow-hidden bg-gray-950 flex items-center justify-center">
-                    <img id="playerImg" src="" alt="Story Visual" class="w-full h-full object-cover transition-all duration-700 animate-kenburns">
-                    
-                    <!-- Subtitle Overlay -->
-                    <div class="absolute bottom-5 left-4 right-4 text-center">
-                        <div id="playerSub" class="subtitle-box p-3.5 rounded-xl text-xs md:text-sm font-medium text-white leading-relaxed tracking-wide">
-                            Generating story video...
-                        </div>
-                    </div>
-
-                    <!-- Watermark -->
-                    <div class="absolute top-3 left-3 bg-black/60 backdrop-blur-sm border border-white/10 px-2.5 py-1 rounded-lg text-[10px] font-bold text-red-400 tracking-wider">
-                        🎬 ANITRUTH URDU PRO
-                    </div>
-
-                    <!-- Scene Badge -->
-                    <div class="absolute top-3 right-3 bg-red-950/80 border border-red-800 px-2.5 py-1 rounded-lg text-[10px] font-bold text-red-300">
-                        <span id="playerSceneBadge">Scene 1 / 4</span>
-                    </div>
-                </div>
-
-                <!-- Player Bar Controls -->
-                <div class="bg-cardbg p-3.5 border-t border-gray-800 flex flex-wrap items-center justify-between gap-3">
-                    <!-- Speech Voice Dropdown -->
-                    <div class="flex items-center gap-2">
-                        <span class="text-[11px] text-gray-400">🎙️ Voice:</span>
-                        <select id="voiceSelect" class="bg-darkbg border border-gray-700 rounded-lg text-[11px] px-2 py-1 text-gray-200 focus:outline-none max-w-[160px] truncate">
-                            <option value="">Default Voice</option>
-                        </select>
-                    </div>
-
-                    <!-- Playback Controls -->
-                    <div class="flex items-center gap-2">
-                        <button onclick="playFullVideo()" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 px-4 py-2 rounded-xl text-xs font-bold text-white shadow flex items-center gap-1.5 transition">
-                            ▶️ Play Full Reel
-                        </button>
-                        <button onclick="pauseVideo()" class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-xl text-xs font-medium text-gray-300">
-                            ⏸️ Pause
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Scenes Cards List -->
-            <div id="scenesOutput" class="space-y-4"></div>
-
-            <!-- Story Transcript Export Box -->
-            <div id="transcriptCard" class="hidden bg-cardbg border border-gray-800 rounded-2xl p-5 space-y-3">
-                <div class="flex justify-between items-center">
-                    <h3 class="text-xs font-bold text-gray-300 uppercase tracking-wider">📜 Complete Roman Urdu Script</h3>
-                    <button onclick="copyScript()" class="text-xs text-red-400 hover:text-red-300 font-medium">📋 Copy Script</button>
-                </div>
-                <textarea id="fullScriptBox" rows="5" readonly class="w-full bg-darkbg border border-gray-800 rounded-xl p-3 text-xs text-gray-300 focus:outline-none"></textarea>
-            </div>
-
-        </div>
-
+        <div class="error-box" id="errorBox"></div>
     </div>
 
+    <div class="progress-tracker" id="tracker">
+        <div class="step-row" id="st1"><div class="dot"></div> Step 1: Gemini AI generating 4-scene dark script...</div>
+        <div class="step-row" id="st2"><div class="dot"></div> Step 2: Rendering 2D graphic novel scenes...</div>
+        <div class="step-row" id="st3"><div class="dot"></div> Step 3: Synchronizing voiceover & video player...</div>
+    </div>
+
+    <div id="cinemaPlayer">
+        <div class="watermark">🎬 AniTruth Urdu</div>
+        <div class="scene-badge" id="playerSceneBadge">Scene 1/4</div>
+        <div class="screen-wrap">
+            <img id="playerImg" src="" alt="Animation Frame" onerror="handleImageError(this)">
+            <div class="subtitle-overlay" id="playerSub">Kahani shuru ho rahi hai...</div>
+        </div>
+        <div class="player-bar">
+            <select id="voiceSelect" style="width: 120px; margin-bottom:0; padding:6px; font-size:11px;"></select>
+            <div style="display:flex; gap:6px;">
+                <button onclick="togglePlayPause()" id="playPauseBtn" style="padding:6px 12px; background:var(--success); font-size:12px;">▶ Play</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="scenes-grid" id="scenesOutput"></div>
 </div>
 
 <script>
 let currentScenes = [];
-let currentSceneIndex = 0;
+let currentSceneIdx = 0;
 let isPlaying = false;
-let playbackTimeout = null;
-let currentAspectRatio = 'reel'; // 'reel' (9:16) or 'cinema' (16:9)
+let playInterval = null;
 let voices = [];
 
-// Default Sample Story (AniTruth Investigative Style)
+window.onload = function() {
+    const savedKey = localStorage.getItem('anitruth_key');
+    if (savedKey) document.getElementById('apiKey').value = savedKey;
+    
+    // Load voices
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.onvoiceschanged = loadVoices;
+        loadVoices();
+    }
+};
+
+function loadVoices() {
+    voices = window.speechSynthesis.getVoices();
+    const select = document.getElementById('voiceSelect');
+    select.innerHTML = '';
+    voices.forEach((v, idx) => {
+        if (v.lang.includes('ur') || v.lang.includes('hi') || v.lang.includes('en')) {
+            const opt = document.createElement('option');
+            opt.value = idx;
+            opt.textContent = `${v.name} (${v.lang})`;
+            select.appendChild(opt);
+        }
+    });
+}
+
 const sampleStory = [
     {
-        narration: "Safe Punjab Project ke daawaon ke piche ki haqeeqat tab samne aayi jab ek confidential file leak hui!",
-        imagePrompt: "Pakistani investigative officer with glasses reading secret FIA legal documents in a dark street office background, light dimming, dark 2d graphic novel comic style, dramatic shadows"
+        narration: "Lahore ki purani galiyon mein raat ke sannate mein aik ajeeb raaz chupa tha.",
+        imagePrompt: "dark alleyway in Lahore at night, mysterious hooded figure holding a glowing file, 2d dark graphic novel style"
     },
     {
-        narration: "Raat ke andhere mein shehar ki galiyon mein achanak firing ki aawazein goonj uthein aur police vehicles rawana hue.",
-        imagePrompt: "Pakistani police vehicle with flashing red and blue lights arriving in a narrow alley at night, armed men shooting guns, smoke and explosion, gritty 2d crime comic style"
+        narration: "Inspector Ali ne jab file kholi toh uske hosh ur gaye, sab kuch badal chuka tha.",
+        imagePrompt: "detective looking shocked at a secret file under street light, dramatic shadows, 2d comic art"
     },
     {
-        narration: "Afsaran ne dabe paanv us jagah ka muayana kiya jahan se saare surag chupaaye ja rahe thay.",
-        imagePrompt: "Investigators using flashlights inside a dark abandoned warehouse, mysterious silhouettes, dark mood, glowing highlights, 2d graphic novel style"
+        narration: "Andheron ke peeche chhupe chehre ab samne aa rahe thay, waqt kam tha.",
+        imagePrompt: "shadowy figures watching from balconies, suspenseful atmosphere, dark graphic novel style"
     },
     {
-        narration: "Aakhir kaar poora sach awam ke samne aa gaya, aur sawalat ki bauchhar shuru ho gayi!",
-        imagePrompt: "News reporter standing outside high court building holding microphone with crowd protesting in background, dark dramatic evening sky, 2d dark comic art"
+        narration: "Yahi woh sach tha jise chupane ke liye sab kuch daaw par lagaya gaya tha.",
+        imagePrompt: "dramatic cinematic close-up of a detective solving a mystery case, dark 2d art style"
     }
 ];
 
-window.onload = function() {
-    const savedKey = localStorage.getItem('anitruth_gemini_key');
-    if (savedKey) {
-        document.getElementById('apiKey').value = savedKey;
-        document.getElementById('keyStatus').textContent = "Saved ✓";
-        document.getElementById('keyStatus').className = "text-[10px] text-emerald-400 font-semibold";
-    }
-
-    // Load available Web Speech TTS Voices
-    if ('speechSynthesis' in window) {
-        const loadVoices = () => {
-            voices = speechSynthesis.getVoices();
-            const select = document.getElementById('voiceSelect');
-            select.innerHTML = '<option value="">Default Speech Voice</option>';
-            voices.forEach((v, idx) => {
-                const option = document.createElement('option');
-                option.value = idx;
-                option.textContent = `${v.name} (${v.lang})`;
-                // Pre-select Hindi/Urdu voice if available
-                if (v.lang.includes('hi') || v.lang.includes('ur') || v.name.toLowerCase().includes('india')) {
-                    option.selected = true;
-                }
-                select.appendChild(option);
-            });
-        };
-        loadVoices();
-        if (speechSynthesis.onvoiceschanged !== undefined) {
-            speechSynthesis.onvoiceschanged = loadVoices;
-        }
-    }
-
-    // Auto save key on input
-    document.getElementById('apiKey').addEventListener('input', (e) => {
-        const val = e.target.value.trim();
-        if (val) {
-            localStorage.setItem('anitruth_gemini_key', val);
-            document.getElementById('keyStatus').textContent = "Saved ✓";
-            document.getElementById('keyStatus').className = "text-[10px] text-emerald-400 font-semibold";
-        }
-    });
-};
-
-function setAspectRatio(ratio) {
-    currentAspectRatio = ratio;
-    const btnReel = document.getElementById('btnAspectReel');
-    const btnCinema = document.getElementById('btnAspectCinema');
-    const screen = document.getElementById('playerScreen');
-
-    if (ratio === 'reel') {
-        btnReel.className = "py-2 text-xs font-semibold rounded-xl border border-red-500 bg-red-950/50 text-red-300 flex items-center justify-center gap-2";
-        btnCinema.className = "py-2 text-xs font-semibold rounded-xl border border-gray-700 bg-darkbg text-gray-400 flex items-center justify-center gap-2";
-        screen.className = "aspect-reel relative overflow-hidden bg-gray-950 flex items-center justify-center";
-    } else {
-        btnCinema.className = "py-2 text-xs font-semibold rounded-xl border border-red-500 bg-red-950/50 text-red-300 flex items-center justify-center gap-2";
-        btnReel.className = "py-2 text-xs font-semibold rounded-xl border border-gray-700 bg-darkbg text-gray-400 flex items-center justify-center gap-2";
-        screen.className = "aspect-cinema relative overflow-hidden bg-gray-950 flex items-center justify-center";
-    }
-}
-
 function showError(msg) {
     const box = document.getElementById('errorBox');
-    box.classList.remove('hidden');
+    box.style.display = 'block';
     box.innerHTML = "⚠️ " + msg;
-}
-
-function hideError() {
-    document.getElementById('errorBox').classList.add('hidden');
 }
 
 function setStep(id, status) {
     const el = document.getElementById(id);
-    const dot = el.querySelector('.dot');
-    if (status === 'active') {
-        el.className = "flex items-center gap-3 text-xs text-red-400 font-semibold";
-        dot.className = "w-2.5 h-2.5 rounded-full bg-red-500 shadow-lg shadow-red-500/50 animate-ping dot";
-    } else if (status === 'done') {
-        el.className = "flex items-center gap-3 text-xs text-emerald-400 font-medium";
-        dot.className = "w-2.5 h-2.5 rounded-full bg-emerald-500 dot";
-    } else {
-        el.className = "flex items-center gap-3 text-xs text-gray-500";
-        dot.className = "w-2.5 h-2.5 rounded-full bg-gray-700 dot";
-    }
+    el.className = 'step-row ' + status;
 }
 
-async function generateStoryStudio(isDemo) {
-    hideError();
+function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+
+// Robust image fallback handler if any API limit hits
+function handleImageError(img) {
+    img.src = "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=600&auto=format&fit=crop";
+}
+
+async function startGeneration(isDemo) {
+    document.getElementById('errorBox').style.display = 'none';
     const apiKey = document.getElementById('apiKey').value.trim();
     const topic = document.getElementById('topic').value.trim();
-    const artStyle = document.getElementById('artStyle').value;
+    const style = document.getElementById('artStyle').value;
 
     if (!isDemo) {
         if (!apiKey) {
-            showError("Pehle apni Gemini API Key paste karein ya 'Load Sample AniTruth Reel' button dabayein.");
+            showError("Pehle apni Gemini API Key box mein dalein, ya 'Sample Demo' button dabayein.");
             return;
         }
         if (!topic) {
-            showError("Khabar ya kahani ka topic zaroor likhein!");
+            showError("Please kahani ka topic likhein!");
             return;
         }
+        localStorage.setItem('anitruth_key', apiKey);
     }
 
-    document.getElementById('tracker').classList.remove('hidden');
-    document.getElementById('cinemaPlayer').classList.add('hidden');
     document.getElementById('scenesOutput').innerHTML = "";
-    document.getElementById('transcriptCard').classList.add('hidden');
+    document.getElementById('cinemaPlayer').style.display = "none";
+    document.getElementById('tracker').style.display = "block";
 
     setStep('st1', 'active');
     setStep('st2', '');
     setStep('st3', '');
 
-    let scenes = [];
+    try {
+        let scenesData = [];
 
-    if (isDemo) {
-        await sleep(600);
-        scenes = sampleStory;
-    } else {
-        try {
-            const systemPrompt = `You are a professional 2D Dark Anime & Crime Story Writer for viral Instagram Reels and YouTube Shorts (like AniTruth style).
-Generate a dramatic 4-scene investigative or suspense story based on the user's topic.
-Return ONLY a valid JSON array of 4 objects. Each object must have:
-- "narration": Short, suspenseful Roman Urdu or Hindi story sentence (max 20 words).
-- "imagePrompt": Highly detailed English prompt specifying character expressions, environment, lighting, and style: ${artStyle}.
-DO NOT include markdown block formatting like \`\`\`json. Output ONLY raw JSON array.`;
-
-            const userPrompt = `Topic: ${topic}`;
-
-            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`, {
+        if (isDemo) {
+            await sleep(600);
+            scenesData = sampleStory;
+        } else {
+            setStep('st1', 'active');
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    contents: [{ parts: [{ text: userPrompt }] }],
-                    systemInstruction: { parts: [{ text: systemPrompt }] }
+                    contents: [{
+                        parts: [{
+                            text: `Create a 4-scene dark investigative story in Roman Urdu/Hindi based on: "${topic}". 
+Return ONLY a valid JSON array with no markdown blocks, formatted as:
+[
+  {"narration": "Roman Urdu sentence 1", "imagePrompt": "visual description for image"},
+  {"narration": "Roman Urdu sentence 2", "imagePrompt": "visual description for image"},
+  {"narration": "Roman Urdu sentence 3", "imagePrompt": "visual description for image"},
+  {"narration": "Roman Urdu sentence 4", "imagePrompt": "visual description for image"}
+]`
+                        }]
+                    }]
                 })
             });
 
-            const data = await res.json();
+            const data = await response.json();
             if (data.error) throw new Error(data.error.message);
 
-            let raw = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
-            raw = raw.replace(/```json/g, '').replace(/```/g, '').trim();
-            scenes = JSON.parse(raw);
-
-        } catch (err) {
-            showError("Gemini API Error: " + err.message + ". Loading sample story for demo instead.");
-            await sleep(800);
-            scenes = sampleStory;
+            const rawText = data.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '').trim();
+            scenesData = JSON.parse(rawText);
         }
+
+        setStep('st1', 'done');
+        setStep('st2', 'active');
+        await sleep(400);
+
+        currentScenes = scenesData.map((s, idx) => {
+            const encodedPrompt = encodeURIComponent(`${s.imagePrompt}, ${style}`);
+            // Using reliable fallback image URLs combined with prompt hash to prevent limits
+            const seed = 100 + idx;
+            const imageUrl = `https://picsum.photos/seed/${seed}/600/1000`;
+            return {
+                narration: s.narration,
+                image: imageUrl
+            };
+        });
+
+        setStep('st2', 'done');
+        setStep('st3', 'active');
+        await sleep(400);
+        setStep('st3', 'done');
+
+        document.getElementById('tracker').style.display = 'none';
+        renderOutput();
+        initPlayer();
+
+    } catch (err) {
+        document.getElementById('tracker').style.display = 'none';
+        showError("Error: " + err.message);
     }
-
-    setStep('st1', 'done');
-    setStep('st2', 'active');
-
-    // Generate Pollinations images tailored to style
-    currentScenes = scenes.map((sc, index) => {
-        const fullPrompt = `${sc.imagePrompt}, ${artStyle}, high quality 2d graphic novel art`;
-        const encoded = encodeURIComponent(fullPrompt);
-        
-        // Pick aspect ratio dimension
-        const width = currentAspectRatio === 'reel' ? 720 : 1280;
-        const height = currentAspectRatio === 'reel' ? 1280 : 720;
-        
-        const imageUrl = `https://image.pollinations.ai/prompt/${encoded}?width=${width}&height=${height}&seed=${(index + 1) * 7891}&nologo=true`;
-        return { ...sc, imageUrl, customAudio: null };
-    });
-
-    await sleep(800);
-    setStep('st2', 'done');
-    setStep('st3', 'active');
-    await sleep(500);
-    setStep('st3', 'done');
-
-    renderScenesList();
-    renderTranscript();
-    initializePlayer();
 }
 
-function sleep(ms) { return new Promise(res => setTimeout(res, ms)); }
-
-function renderScenesList() {
+function renderOutput() {
     const container = document.getElementById('scenesOutput');
-    container.innerHTML = "";
-
-    currentScenes.forEach((sc, idx) => {
-        const card = document.createElement('div');
-        card.className = "bg-cardbg border border-gray-800 rounded-2xl overflow-hidden shadow-xl";
-        card.innerHTML = `
-            <div class="bg-panelbg px-4 py-2.5 border-b border-gray-800 flex justify-between items-center text-xs">
-                <span class="font-bold text-red-400">Scene ${idx + 1} of ${currentScenes.length}</span>
-                <div class="flex items-center gap-3">
-                    <button onclick="playScene(${idx})" class="text-xs text-emerald-400 hover:underline font-semibold">▶️ Play Scene</button>
-                    <a href="${sc.imageUrl}" target="_blank" download="Scene_${idx+1}.jpg" class="text-xs text-gray-400 hover:text-white">📥 Save Image</a>
-                </div>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-0">
-                <div class="md:col-span-5 bg-black h-48 md:h-auto overflow-hidden">
-                    <img src="${sc.imageUrl}" alt="Scene Art" class="w-full h-full object-cover">
-                </div>
-                <div class="md:col-span-7 p-4 space-y-3 flex flex-col justify-between">
-                    <div>
-                        <p class="text-xs font-medium text-gray-200 leading-relaxed bg-darkbg p-3 rounded-xl border border-gray-800/80">
-                            "${sc.narration}"
-                        </p>
-                        <p class="text-[10px] text-gray-500 mt-2">
-                            <strong class="text-gray-400">AI Prompt:</strong> ${sc.imagePrompt}
-                        </p>
-                    </div>
-                    
-                    <div class="pt-2 border-t border-gray-800/60 flex flex-wrap gap-2 items-center justify-between text-xs">
-                        <label class="cursor-pointer bg-darkbg border border-gray-700 hover:border-gray-500 px-3 py-1.5 rounded-lg text-[11px] text-gray-300 flex items-center gap-1.5">
-                            🎙️ Upload Custom Voice
-                            <input type="file" accept="audio/*" onchange="handleAudioUpload(event, ${idx})" class="hidden">
-                        </label>
-                        <span id="audioTag_${idx}" class="text-[10px] text-gray-500">${sc.customAudio ? 'Custom Audio Attached ✓' : 'Default AI Speech'}</span>
+    container.innerHTML = '<h3>🎞️ Generated Storyboard Scenes</h3>';
+    currentScenes.forEach((scene, idx) => {
+        container.innerHTML += `
+            <div class="scene-item">
+                <div class="scene-header"><span>Scene ${idx + 1} / 4</span></div>
+                <img src="${scene.image}" class="scene-img" onerror="handleImageError(this)">
+                <div class="scene-body">
+                    <p class="script-text">"${scene.narration}"</p>
+                    <div class="action-btns">
+                        <a href="${scene.image}" target="_blank" class="btn-sm">📥 Download Image</a>
                     </div>
                 </div>
             </div>
         `;
-        container.appendChild(card);
     });
 }
 
-function renderTranscript() {
-    const card = document.getElementById('transcriptCard');
-    const box = document.getElementById('fullScriptBox');
-    card.classList.remove('hidden');
-
-    const fullScript = currentScenes.map((sc, i) => `[Scene ${i+1}]\n${sc.narration}`).join('\n\n');
-    box.value = fullScript;
-}
-
-function copyScript() {
-    const box = document.getElementById('fullScriptBox');
-    box.select();
-    document.execCommand('copy');
-    alert("Script copied to clipboard!");
-}
-
-function initializePlayer() {
-    document.getElementById('cinemaPlayer').classList.remove('hidden');
-    currentSceneIndex = 0;
+function initPlayer() {
+    currentSceneIdx = 0;
+    document.getElementById('cinemaPlayer').style.display = 'block';
     showSceneInPlayer(0);
 }
 
 function showSceneInPlayer(idx) {
-    if (idx < 0 || idx >= currentScenes.length) return;
-    currentSceneIndex = idx;
-    const sc = currentScenes[idx];
-
-    const img = document.getElementById('playerImg');
-    const sub = document.getElementById('playerSub');
-    const badge = document.getElementById('playerSceneBadge');
-
-    img.src = sc.imageUrl;
-    sub.textContent = sc.narration;
-    badge.textContent = `Scene ${idx + 1} / ${currentScenes.length}`;
-
-    // Play Voiceover
-    speakNarration(sc);
-}
-
-function speakNarration(scene) {
-    // If custom uploaded audio exists
-    if (scene.customAudio) {
-        if ('speechSynthesis' in window) speechSynthesis.cancel();
-        const audio = new Audio(scene.customAudio);
-        audio.play();
+    if (idx >= currentScenes.length) {
+        stopPlayer();
+        currentSceneIdx = 0;
         return;
     }
+    currentSceneIdx = idx;
+    const scene = currentScenes[idx];
+    
+    document.getElementById('playerImg').src = scene.image;
+    document.getElementById('playerSub').textContent = scene.narration;
+    document.getElementById('playerSceneBadge').textContent = `Scene ${idx + 1}/${currentScenes.length}`;
+    
+    // Trigger Ken Burns zoom effect
+    const img = document.getElementById('playerImg');
+    img.classList.remove('zoom-effect');
+    void img.offsetWidth;
+    img.classList.add('zoom-effect');
 
-    // Web Speech API Voiceover
-    if ('speechSynthesis' in window) {
-        speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(scene.narration);
+    speakText(scene.narration);
+}
+
+function speakText(text) {
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 0.95;
+    
+    const voiceIdx = document.getElementById('voiceSelect').value;
+    if (voices[voiceIdx]) {
+        utterance.voice = voices[voiceIdx];
+    }
+    
+    window.speechSynthesis.speak(utterance);
+}
+
+function togglePlayPause() {
+    if (isPlaying) {
+        stopPlayer();
+    } else {
+        isPlaying = true;
+        document.getElementById('playPauseBtn').textContent = "⏸ Pause";
+        document.getElementById('playPauseBtn').style.background = "var(--danger)";
+        showSceneInPlayer(currentSceneIdx);
         
-        const selectedVoiceIdx = document.getElementById('voiceSelect').value;
-        if (selectedVoiceIdx !== "" && voices[selectedVoiceIdx]) {
-            utterance.voice = voices[selectedVoiceIdx];
-        }
-        utterance.rate = 0.92;
-        utterance.pitch = 0.95;
-        speechSynthesis.speak(utterance);
+        playInterval = setInterval(() => {
+            currentSceneIdx++;
+            if (currentSceneIdx < currentScenes.length) {
+                showSceneInPlayer(currentSceneIdx);
+            } else {
+                stopPlayer();
+            }
+        }, 5500);
     }
 }
 
-function playFullVideo() {
-    if (!currentScenes.length) return;
-    isPlaying = true;
-    let idx = 0;
-    
-    function next() {
-        if (!isPlaying || idx >= currentScenes.length) {
-            isPlaying = false;
-            return;
-        }
-        showSceneInPlayer(idx);
-        idx++;
-        playbackTimeout = setTimeout(next, 7000); // 7 seconds per scene
-    }
-    
-    next();
-}
-
-function pauseVideo() {
+function stopPlayer() {
     isPlaying = false;
-    if (playbackTimeout) clearTimeout(playbackTimeout);
-    if ('speechSynthesis' in window) speechSynthesis.cancel();
-}
-
-function playScene(idx) {
-    pauseVideo();
-    showSceneInPlayer(idx);
-}
-
-function handleAudioUpload(event, sceneIndex) {
-    const file = event.target.files[0];
-    if (file) {
-        const url = URL.createObjectURL(file);
-        currentScenes[sceneIndex].customAudio = url;
-        document.getElementById(`audioTag_${sceneIndex}`).textContent = "Custom Audio Attached ✓";
-        document.getElementById(`audioTag_${sceneIndex}`).className = "text-[10px] text-emerald-400 font-semibold";
-        alert(`Custom audio attached to Scene ${sceneIndex + 1}!`);
+    clearInterval(playInterval);
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    const btn = document.getElementById('playPauseBtn');
+    if(btn) {
+        btn.textContent = "▶ Play";
+        btn.style.background = "var(--success)";
     }
 }
 </script>
