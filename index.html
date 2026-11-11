@@ -27,7 +27,7 @@
 
         /* Studio Box */
         .studio-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .step-badge { display: inline-block; background: rgba(59, 130, 246, 0.15); color: #60a5fa; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; margin-bottom: 8px; }
+        .step-badge { display: inline-block; background: rgba(16, 185, 129, 0.15); color: #34d399; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; margin-bottom: 12px; }
         
         label { display: block; font-size: 13px; color: #d1d5db; margin-bottom: 6px; font-weight: 600; }
         input, textarea, select { width: 100%; background: #1f2937; border: 1px solid #374151; color: white; padding: 12px; border-radius: 10px; font-size: 14px; margin-bottom: 15px; outline: none; }
@@ -78,10 +78,10 @@
 
     <!-- Input Studio -->
     <div class="studio-card">
-        <span class="step-badge">STEP 1: SETUP & TOPIC</span>
+        <span class="step-badge">✅ API KEY CONNECTED & READY</span>
         
-        <label>🔑 Gemini API Key (Optional - Demo ke liye khali chhod dein):</label>
-        <input type="password" id="apiKey" placeholder="AIzaSy... (Google AI Studio se free key dalein)">
+        <label>🔑 Gemini API Key (Connected):</label>
+        <input type="password" id="apiKey" value="AQ.Ab8RN6LFU87P6mUd8spddH_8gIs8hBC9-7eAsJFh3hFygGWZ1w">
 
         <label>🎨 Animation Art Style:</label>
         <select id="artStyle">
@@ -94,8 +94,8 @@
         <textarea id="topic" rows="3" placeholder="Misal: Ek sahafi jo raat ke andhere mein ek band factory ke raaz be-naqab karta hai..."></textarea>
 
         <div class="btn-group">
-            <button class="btn-primary" onclick="startGeneration(false)">🚀 AI Story Banayein (With Key)</button>
-            <button class="btn-demo" onclick="startGeneration(true)">⚡ Free Sample Demo Chalayein</button>
+            <button class="btn-primary" onclick="startGeneration(false)">🚀 AI Story Banayein</button>
+            <button class="btn-demo" onclick="startGeneration(true)">⚡ Sample Demo Chalayein</button>
         </div>
     </div>
 
@@ -150,12 +150,11 @@ async function startGeneration(isDemo) {
     const topic = document.getElementById('topic').value.trim();
     const style = document.getElementById('artStyle').value;
 
-    if (!isDemo && (!apiKey || !topic)) {
-        alert("Agar aapke paas API key nahi hai, toh 'Free Sample Demo Chalayein' button dabayein!");
+    if (!isDemo && !topic) {
+        alert("Please pehle 'Apni Kahani ka Topic' box mein koi kahani likhein!");
         return;
     }
 
-    // Reset UI
     document.getElementById('scenesOutput').innerHTML = "";
     document.getElementById('cinemaPlayer').style.display = "none";
     const tracker = document.getElementById('tracker');
@@ -173,4 +172,3 @@ async function startGeneration(isDemo) {
             scenesData = sampleStory;
         } else {
             const prompt = `Create a dramatic 4-scene 2D animation story in Roman Urdu about: "${topic}".
-
