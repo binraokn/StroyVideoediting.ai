@@ -1,170 +1,100 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>PUBG MOBILE - Lobby</title><style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif;-webkit-tap-highlight-color:transparent}
-body{background:#000;overflow:hidden;height:100dvh;color:#fff}
-#app{position:relative;width:100%;height:100dvh;overflow:hidden;background:#0a1a2e}
-/* ===== BACKGROUND ===== */
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>PUBG Lobby - 3D Static</title><style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}body{overflow:hidden;height:100dvh;background:#000}
+#app{position:relative;width:100%;height:100dvh;overflow:hidden}
 #bgImg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
-#bgGrad{position:absolute;inset:0;z-index:2;background:linear-gradient(180deg,rgba(0,0,0,.35) 0%,transparent 25%,transparent 65%,rgba(0,0,0,.55) 100%)}
-/* ===== TOP BAR ===== */
-.top{position:absolute;top:0;left:0;right:0;z-index:30;display:flex;justify-content:space-between;align-items:flex-start;padding:8px 8px 0}
-.leftTop{display:flex;flex-direction:column;gap:4px}
-.profileCard{display:flex;align-items:center;gap:8px;background:linear-gradient(90deg,rgba(0,0,0,.85),rgba(0,0,0,.5));border:1px solid rgba(255,255,255,.25);border-radius:8px;padding:4px 10px 4px 4px;cursor:pointer}
-.pAvatar{width:48px;height:48px;border-radius:6px;background:#facc15;color:#000;font-weight:900;font-size:22px;display:flex;align-items:center;justify-content:center;border:2px solid #fff;overflow:hidden}
-.pAvatar img{width:100%;height:100%;object-fit:cover}
-.pName{font-weight:900;font-size:15px;line-height:1}
-.pName span{font-size:10px;background:#facc15;color:#000;padding:1px 5px;border-radius:3px;margin-left:4px}
-.pSub{font-size:10px;color:#cbd5e1}
-.pTier{font-size:9px;color:#facc15}
-.findTeam{display:flex;align-items:center;gap:6px;background:rgba(0,0,0,.7);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:5px 10px;font-size:11px;width:max-content}
-.findTeam b{color:#facc15}
-.rightTop{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
-.currencyRow{display:flex;gap:6px}
-.curBox{display:flex;align-items:center;gap:4px;background:rgba(0,0,0,.75);border:1px solid rgba(255,215,0,.6);border-radius:20px;padding:4px 8px;font-size:12px;font-weight:900}
-.curBox span{color:#fff}
-.curBox i{font-style:normal;background:#facc15;color:#000;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px}
-.royaleCard{display:flex;gap:8px;background:linear-gradient(135deg,#1e293b,#0f172a);border:1px solid #facc15;border-radius:8px;padding:6px;width:205px;cursor:pointer}
-.royaleCard img{width:52px;height:52px;border-radius:6px;object-fit:cover;background:#333}
-.royaleCard h4{font-size:12px;color:#facc15}
-.royaleCard p{font-size:10px;color:#cbd5e1;line-height:1.4}
-.royaleBadge{background:#facc15;color:#000;font-size:9px;font-weight:900;padding:2px 6px;border-radius:10px;width:max-content}
-.eventRow{display:flex;gap:6px}
-.eventBtn{background:linear-gradient(135deg,#facc15,#ff8a00);color:#000;font-weight:900;font-size:11px;padding:6px 12px;border-radius:6px;text-align:center;cursor:pointer;border:1px solid #fff}
-.eventBtn.white{background:#fff}
-/* ===== CENTER ===== */
-#stage{position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);width:260px;height:62%;z-index:20;cursor:grab;perspective:1100px}
-#spinner{position:relative;width:100%;height:100%;transform-style:preserve-3d}
-#spinner img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 25px 25px rgba(0,0,0,.9));backface-visibility:hidden}
-#backImg{transform:rotateY(180deg)}
-#shadow{position:absolute;bottom:14%;left:50%;transform:translateX(-50%);width:200px;height:22px;background:radial-gradient(ellipse,rgba(0,0,0,.7),transparent);border-radius:50%;z-index:15}
-#car{position:absolute;left:2%;bottom:22%;width:32%;z-index:12;filter:drop-shadow(0 10px 15px rgba(0,0,0,.6))}
-#car div{background:linear-gradient(135deg,#93c5fd,#3b82f6);border-radius:20px 20px 8px 8px;padding:10px;text-align:center;font-weight:900;font-size:12px;color:#fff;border:2px solid rgba(255,255,255,.5)}
-#car small{font-size:9px;font-weight:400;opacity:.9}
-#charName{position:absolute;left:50%;bottom:27%;transform:translateX(-50%);z-index:21;background:rgba(0,0,0,.6);padding:4px 12px;border-radius:20px;font-size:11px;white-space:nowrap}
-/* ===== BOTTOM LEFT ===== */
-.mapCard{position:absolute;left:8px;bottom:98px;z-index:25;background:rgba(0,0,0,.8);border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:6px;width:135px}
-.mapCard h5{font-size:11px;color:#fff}
-.mapCard p{font-size:10px;color:#facc15}
-.mapCard small{font-size:9px;color:#94a3b8}
-.modeRow{display:flex;gap:4px;margin-top:5px}
-.modeRow span{background:#1e293b;border:1px solid #475569;padding:3px 6px;border-radius:4px;font-size:9px}
-.modeRow span.active{background:#facc15;color:#000;font-weight:900}
-/* ===== BOTTOM BAR ===== */
-.bottom{position:absolute;bottom:0;left:0;right:0;z-index:30;background:linear-gradient(180deg,transparent,rgba(0,0,0,.75));padding:6px 8px 8px}
+#bgGrad{position:absolute;inset:0;z-index:2;background:linear-gradient(180deg,rgba(0,0,0,.2),transparent 30%,transparent 70%,rgba(0,0,0,.45))}
+/* ===== TOP ===== */
+.top{position:absolute;top:0;left:0;right:0;z-index:30;display:flex;justify-content:space-between;padding:7px 7px 0}
+.profileCard{display:flex;align-items:center;gap:7px;background:linear-gradient(90deg,rgba(0,0,0,.88),rgba(0,0,0,.4));border:1px solid rgba(255,255,255,.25);border-radius:8px;padding:3px 9px 3px 3px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.5)}
+.pAvatar{width:44px;height:44px;border-radius:5px;background:linear-gradient(135deg,#fde047,#f59e0b);color:#000;font-weight:900;font-size:20px;display:flex;align-items:center;justify-content:center;border:1.5px solid #fff;box-shadow:inset 0 -3px 6px rgba(0,0,0,.3)}
+.pName{font-weight:900;font-size:13px;color:#fff;text-shadow:0 1px 3px #000}.pName span{font-size:9px;background:#facc15;color:#000;padding:1px 4px;border-radius:3px}
+.pSub{font-size:9px;color:#e2e8f0}.pTier{font-size:9px;color:#facc15}
+.findTeam{margin-top:4px;background:rgba(0,0,0,.65);border:1px solid rgba(255,255,255,.15);border-radius:15px;padding:4px 9px;font-size:10px;color:#fff;width:max-content}.findTeam b{color:#facc15}
+/* ===== REAL ICONS - 3D JAISE ===== */
+.rightTop{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+.currencyRow{display:flex;gap:4px;align-items:center}
+.cur{display:flex;align-items:center;gap:4px;background:linear-gradient(180deg,rgba(30,30,30,.9),rgba(0,0,0,.85));border:1px solid rgba(255,255,255,.3);border-radius:13px;padding:2px 6px 2px 2px;font-size:11px;font-weight:900;color:#fff;box-shadow:0 2px 5px rgba(0,0,0,.5)}
+.icon3d{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;border:1px solid rgba(255,255,255,.8);box-shadow:0 2px 4px rgba(0,0,0,.6), inset 0 -2px 3px rgba(0,0,0,.4), inset 0 1px 1px rgba(255,255,255,.6)}
+.ucIcon{background:radial-gradient(circle at 30% 30%,#fff59d,#facc15 40%,#b45309);color:#7c2d12;font-weight:900}
+.bpIcon{background:radial-gradient(circle at 30% 30%,#fff,#cbd5e1 40%,#64748b);color:#000}
+.matIcon{background:radial-gradient(circle at 30% 30%,#fef3c7,#d6d3d1 40%,#78716c);color:#000}
+.agIcon{background:radial-gradient(circle at 30% 30%,#fda4af,#ef4444 50%,#991b1b);color:#fff}
+.cur .plus{color:#facc15;font-size:14px;padding:0 1px}
+.royaleCard{display:flex;gap:7px;background:linear-gradient(135deg,#1e293b,#0f172a);border:1px solid #facc15;border-radius:8px;padding:5px;width:185px;box-shadow:0 3px 10px rgba(0,0,0,.6)}
+.rpIcon{width:42px;height:42px;background:linear-gradient(180deg,#fde047,#b45309);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;border:1px solid #fff;box-shadow:inset 0 -3px 5px rgba(0,0,0,.3)}
+.royaleCard h4{font-size:11px;color:#facc15}.royaleCard p{font-size:9px;color:#cbd5e1;line-height:1.35}
+.eventRow{display:flex;gap:5px}
+.eventBtn{background:linear-gradient(180deg,#fde047,#f59e0b);color:#000;font-weight:900;font-size:10px;padding:5px 10px;border-radius:5px;border:1px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,.5)}.eventBtn.white{background:linear-gradient(180deg,#fff,#cbd5e1)}
+/* ===== CHARACTER - AB STATIC, 3D EFFECT KE SATH ===== */
+#stage{position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);width:235px;height:60%;z-index:20;pointer-events:none}
+#charWrap{position:relative;width:100%;height:100%}
+#charWrap img{width:100%;height:100%;object-fit:contain;
+/* 3D JAISE LAGNE KE LIYE - SHADOW + LIGHT */
+filter:drop-shadow(0 25px 18px rgba(0,0,0,.85)) drop-shadow(0 5px 5px rgba(0,0,0,.6)) contrast(1.08) saturate(1.15) brightness(1.03);}
+#shadow{position:absolute;bottom:14%;left:50%;transform:translateX(-50%);width:175px;height:20px;background:radial-gradient(ellipse,rgba(0,0,0,.75),rgba(0,0,0,.3) 50%,transparent 70%);border-radius:50%;z-index:15}
+#light{position:absolute;top:12%;left:50%;transform:translateX(-50%);width:260px;height:120px;background:radial-gradient(ellipse,rgba(255,255,255,.18),transparent 70%);z-index:18;pointer-events:none;border-radius:50%}
+#charName{position:absolute;left:50%;bottom:29%;transform:translateX(-50%);z-index:21;background:rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.2);padding:3px 10px;border-radius:15px;font-size:10px;white-space:nowrap}
+/* ===== LEFT ICONS ===== */
+#car{position:absolute;left:10px;bottom:31%;width:130px;z-index:12}
+#car div{background:linear-gradient(180deg,#93c5fd,#1d4ed8);border-radius:12px;padding:7px;text-align:center;font-weight:900;font-size:11px;color:#fff;border:1px solid rgba(255,255,255,.7);box-shadow:0 4px 10px rgba(0,0,0,.6)}#car small{font-size:8px;font-weight:400}
+.mapCard{position:absolute;left:8px;bottom:135px;z-index:25;background:linear-gradient(180deg,rgba(20,20,20,.9),rgba(0,0,0,.85));border:1px solid rgba(255,255,255,.3);border-radius:7px;padding:5px;width:128px;box-shadow:0 3px 8px rgba(0,0,0,.5)}
+.mapCard h5{font-size:10px}.mapCard p{font-size:9px;color:#facc15}.mapCard small{font-size:8px;color:#94a3b8}
+.modeRow{display:flex;gap:3px;margin-top:4px}.modeRow span{background:#1e293b;padding:2px 5px;border-radius:3px;font-size:8px}.modeRow span.active{background:#facc15;color:#000;font-weight:900}
+/* ===== BOTTOM ===== */
+.bottom{position:absolute;bottom:0;left:0;right:0;z-index:30;background:linear-gradient(180deg,transparent,rgba(0,0,0,.75));padding:4px 8px 7px}
 .bottomTop{display:flex;justify-content:space-between;align-items:flex-end}
-.startBtn{background:linear-gradient(180deg,#fde047,#eab308);color:#000;font-size:28px;font-weight:900;padding:10px 42px;border:none;clip-path:polygon(8% 0,100% 0,92% 100%,0 100%);cursor:pointer;box-shadow:0 5px 0 #a16207}
-.startBtn:active{transform:translateY(2px)}
-.teamUp{font-size:11px;background:rgba(0,0,0,.6);padding:6px 10px;border-radius:20px}
-.teamUp b{color:#facc15}
-.bottomMenu{display:flex;justify-content:space-between;margin-top:8px;border-top:1px solid rgba(255,255,255,.15);padding-top:6px}
-.bottomMenu div{font-size:11px;font-weight:900;text-align:center;cursor:pointer;color:#e2e8f0;padding:4px 8px}
-.bottomMenu div.active{color:#facc15}
-.bottomMenu small{display:block;font-size:8px;color:#94a3b8;font-weight:400}
-#timer{position:absolute;top:68px;left:50%;transform:translateX(-50%);background:#e11d48;color:#fff;padding:8px 16px;border-radius:6px;font-weight:900;display:none;z-index:60;font-size:13px}
-#ucPop{position:absolute;top:96px;left:50%;transform:translateX(-50%);background:#ffcc00;color:#000;font-weight:900;padding:8px 16px;border-radius:20px;display:none;z-index:60}
-#hint{position:absolute;top:48%;left:50%;transform:translateX(-50%);z-index:25;background:rgba(0,0,0,.65);padding:5px 12px;border-radius:20px;font-size:10px;color:#facc15;white-space:nowrap;animation:blink 2s infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
-/* ===== SETTINGS ===== */
+.startBtn{background:linear-gradient(180deg,#fef08a,#facc15 50%,#ca8a04);color:#000;font-size:24px;font-weight:900;padding:8px 34px;border:none;clip-path:polygon(8% 0,100% 0,92% 100%,0 100%);cursor:pointer;box-shadow:0 4px 0 #854d0e, 0 6px 12px rgba(0,0,0,.6);text-shadow:0 1px 0 rgba(255,255,255,.5)}
+.teamUp{font-size:10px;background:rgba(0,0,0,.6);padding:5px 9px;border-radius:15px}.teamUp b{color:#facc15}
+.bottomMenu{display:flex;justify-content:space-between;margin-top:6px;border-top:1px solid rgba(255,255,255,.15);padding-top:5px}
+.bottomMenu div{font-size:10px;font-weight:900;text-align:center;color:#e2e8f0;cursor:pointer}.bottomMenu small{display:block;font-size:8px;color:#94a3b8;font-weight:400}.bottomMenu div.active{color:#facc15}
+/* ===== LOGIN ICONS - REAL JAISE ===== */
+#loginIcons{position:absolute;top:38%;right:8px;z-index:28;display:flex;flex-direction:column;gap:6px}
+.loginIcon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;border:2px solid rgba(255,255,255,.9);box-shadow:0 3px 8px rgba(0,0,0,.6), inset 0 -2px 4px rgba(0,0,0,.3);cursor:pointer}
+.fb{background:linear-gradient(180deg,#3b82f6,#1e40af);color:#fff}.gg{background:linear-gradient(180deg,#fff,#e2e8f0);color:#ea4335}.x{background:linear-gradient(180deg,#000,#333);color:#fff}.mail{background:linear-gradient(180deg,#facc15,#b45309);color:#000}
+#timer{position:absolute;top:52px;right:8px;background:rgba(225,29,72,.95);color:#fff;padding:5px 10px;border-radius:15px;font-weight:900;display:none;z-index:60;font-size:11px}
+#ucPop{position:absolute;top:78px;right:8px;background:linear-gradient(180deg,#fef08a,#f59e0b);color:#000;font-weight:900;padding:7px 12px;border-radius:15px;display:none;z-index:60;font-size:12px;box-shadow:0 0 15px #facc15}
 #set{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:100;justify-content:center;align-items:center;padding:12px}
-.modal{background:#0f172a;border:2px solid #facc15;width:420px;max-width:100%;padding:20px;border-radius:12px;max-height:92vh;overflow-y:auto}
-.modal h3{color:#facc15;font-size:18px}.modal p{font-size:12px;color:#94a3b8;margin-top:4px}
-.modal label{display:block;font-size:12px;color:#cbd5e1;margin:12px 0 5px}.modal input,.modal select{width:100%;padding:11px;background:#1e293b;border:1px solid #475569;color:#fff;border-radius:6px;font-size:14px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.btns{display:flex;gap:10px;margin-top:18px}.save{background:#10b981;color:#fff;border:none;padding:12px;border-radius:6px;font-weight:900;flex:1}.cancel{background:#ef4444;color:#fff;border:none;padding:12px;border-radius:6px;font-weight:900;flex:1}
-/* ===== PAGES ===== */
-.page{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:90;padding:14px;overflow-y:auto}.pbox{max-width:520px;margin:20px auto;background:#111827;border:2px solid #00e5ff;border-radius:14px;padding:16px}.pbox h2{color:#00e5ff}.pbox p{font-size:13px;line-height:1.7;margin-top:10px;color:#e2e8f0}.close{background:#facc15;color:#000;font-weight:900;width:100%;padding:12px;border:none;border-radius:8px;margin-top:14px}
-@media(max-width:380px){#stage{width:220px}.royaleCard{width:170px}.startBtn{padding:10px 28px;font-size:22px}}
+.modal{background:#0f172a;border:2px solid #facc15;width:400px;max-width:100%;padding:18px;border-radius:12px;color:#fff}
+.modal h3{color:#facc15}.modal label{display:block;font-size:12px;color:#cbd5e1;margin:10px 0 5px}.modal input,.modal select{width:100%;padding:10px;background:#1e293b;border:1px solid #475569;color:#fff;border-radius:6px}.btns{display:flex;gap:10px;margin-top:16px}.save{background:#10b981;color:#fff;border:none;padding:11px;border-radius:6px;font-weight:900;flex:1}.cancel{background:#ef4444;color:#fff;border:none;padding:11px;border-radius:6px;font-weight:900;flex:1}
+.page{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:90;padding:14px}.pbox{max-width:500px;margin:20px auto;background:#111827;border:2px solid #00e5ff;border-radius:12px;padding:14px;color:#fff}.close{background:#facc15;color:#000;font-weight:900;width:100%;padding:11px;border:none;border-radius:8px;margin-top:12px}
 </style></head><body>
 <div id="app">
-<img id="bgImg" src="bg.jpg" onerror="this.style.display='none'">
-<div id="bgGrad"></div>
-
-<!-- TOP -->
+<img id="bgImg" src="bg.jpg"><div id="bgGrad"></div>
 <div class="top">
-<div class="leftTop">
-<div class="profileCard" id="dpClick">
-<div class="pAvatar">M</div>
-<div><div class="pName">AR • Pakistan YT <span>YT</span></div><div class="pSub">ID: 521122334 • Lv 78</div><div class="pTier">⭐ Ace Dominator • 24/100</div></div>
-</div>
-<div class="findTeam">🔍 Find Teammate <b>Team Up</b> • Erangel</div>
-</div>
+<div><div class="profileCard" id="dpClick"><div class="pAvatar">M</div><div><div class="pName">AR • Pakistan YT <span>YT</span></div><div class="pSub">ID: 521122334 • Lv 78</div><div class="pTier">⭐ Ace Dominator • 24/100</div></div></div><div class="findTeam">🔍 Find Teammate <b>Team Up</b> • Erangel</div></div>
 <div class="rightTop">
 <div class="currencyRow">
-<div class="curBox"><i>U</i> <span id="ucDisplay">103,666</span> <b style="color:#facc15">+</b></div>
-<div class="curBox"><i style="background:#fff">B</i> <span>45,200</span></div>
-<div class="curBox"><i style="background:#94a3b8">M</i> <span id="matDisplay">15</span></div>
-<div class="curBox">7+</div>
+<div class="cur"><span class="icon3d ucIcon">U</span><span id="ucDisplay">103,666</span><span class="plus">+</span></div>
+<div class="cur"><span class="icon3d bpIcon">B</span><span>45,200</span></div>
+<div class="cur"><span class="icon3d matIcon">M</span><span id="matDisplay">50</span></div>
+<div class="cur"><span class="icon3d agIcon">A</span><span>1,250</span></div>
+<div class="cur" style="padding:3px 7px">7+</div>
 </div>
-<div class="royaleCard" onclick="openPage('passPage')">
-<div style="width:52px;height:52px;background:#facc15;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:24px">👑</div>
-<div><div style="display:flex;gap:5px;align-items:center"><h4>ROYALE PASS</h4><span class="royaleBadge">RP 100</span></div><p>Season 8 • Elite Pass<br>Bonus Pass • Arctic Chronicles</p></div>
-</div>
-<div class="eventRow"><div class="eventBtn" onclick="openPage('eventPage')">SALE Deals</div><div class="eventBtn white" onclick="openPage('eventPage')">Events</div></div>
+<div class="royaleCard"><div class="rpIcon">👑</div><div><h4>ROYALE PASS <span style="background:#facc15;color:#000;font-size:8px;padding:1px 4px;border-radius:8px">RP 100</span></h4><p>Season 8 • Elite Pass<br>Bonus Pass • Arctic Chronicles</p></div></div>
+<div class="eventRow"><div class="eventBtn">🔥 SALE Deals</div><div class="eventBtn white">🎁 Events</div></div>
 </div>
 </div>
-
-<!-- CAR + CHARACTER -->
-<div id="car"><div>🏎️ SPORTS CAR<small><br>Primewood Genesis • Golden</small></div></div>
+<!-- LOGIN ICONS RIGHT SIDE - REAL JAISE -->
+<div id="loginIcons">
+<div class="loginIcon fb" title="Facebook">f</div>
+<div class="loginIcon gg" title="Google">G</div>
+<div class="loginIcon x" title="X">𝕏</div>
+<div class="loginIcon mail" title="Mail">✉️</div>
+<div class="loginIcon" style="background:linear-gradient(180deg,#22c55e,#15803d);color:#fff" title="WhatsApp">💬</div>
+</div>
+<div id="car"><div>🏎️ SPORTS CAR<small><br>Primewood Genesis</small></div></div>
+<div id="light"></div>
 <div id="shadow"></div>
-<div id="stage"><div id="spinner"><img src="front.png" onerror="this.src='bg.jpg'"><img id="backImg" src="back.png"></div></div>
+<!-- CHARACTER - STATIC - GHOOMEGA NAHI -->
+<div id="stage"><div id="charWrap"><img src="front.png"></div></div>
 <div id="charName">AR • Pakistan YT • 👑 Mythic Fashion</div>
-<div id="hint">👆 Character ko drag karo - Aage / Peeche ghoomega</div>
-
-<!-- MAP CARD -->
 <div class="mapCard"><h5>🗺️ Classic - Unranked</h5><p>4 TPP • Erangel</p><small>Middle East • Ultra HD</small><div class="modeRow"><span class="active">TPP</span><span>FPP</span><span>Solo</span><span>Duo</span><span>Squad</span></div></div>
-
-<!-- BOTTOM -->
-<div class="bottom">
-<div class="bottomTop"><button class="startBtn" onclick="alert('Matchmaking Started... 🔥 Erangel - TPP Squad')">Start</button><div class="teamUp">Team Up <b>[DREAGLE] Recruitment</b> • Join Now</div></div>
-<div class="bottomMenu"><div onclick="openPage('clanPage')">CLAN<small>Level 10</small></div><div>SETTINGS<small>Controls</small></div><div class="active" onclick="openPage('passPage')">SEASON<small>RP 100</small></div><div>WORKSHOP<small>Skins</small></div><div>MISSIONS<small>Daily</small></div><div onclick="openPage('invPage')">INVENTORY<small>Items</small></div></div>
+<div class="bottom"><div class="bottomTop"><button class="startBtn" onclick="alert('Matchmaking Started...')">Start</button><div class="teamUp">Team Up <b>[DREAGLE] Recruitment</b> • Join</div></div><div class="bottomMenu"><div>🛡️ CLAN<small>Level 10</small></div><div>⚙️ SETTINGS<small>Controls</small></div><div class="active">👑 SEASON<small>RP 100</small></div><div>🎨 WORKSHOP<small>Skins</small></div><div>🎯 MISSIONS<small>Daily</small></div><div>🎒 INVENTORY<small>Items</small></div></div></div>
+<div id="timer">⏳ UC: <span id="timeLeft">0</span>s</div><div id="ucPop"></div>
 </div>
-
-<div id="timer">UC Delivery Timer: <span id="timeLeft">0</span>s</div>
-<div id="ucPop"></div>
-</div>
-
-<!-- PAGES -->
-<div id="passPage" class="page"><div class="pbox"><h2>👑 ROYALE PASS - Season 8</h2><p>RP 100 / 100 • Elite Pass Unlocked<br>Arctic Chronicles • Bonus Pass<br>Rewards: M416 Glacier • Outfit • UC 1200<br>Next Season: 21 Days Left</p><button class="close" onclick="closePage('passPage')">BACK TO LOBBY</button></div></div>
-<div id="eventPage" class="page"><div class="pbox"><h2>🎉 EVENTS</h2><p>❄️ Arctic Chronicles<br>🏎️ Sports Car Event<br>🎁 Daily Login • 7 Days<br>🔥 PMGC 2026 • Vote Now</p><button class="close" onclick="closePage('eventPage')">BACK</button></div></div>
-<div id="clanPage" class="page"><div class="pbox"><h2>🛡️ CLAN - DREAGLE</h2><p>Level 10 • Members 48/50<br>Leader: AR • Pakistan YT<br>Clan War • Weekly Rewards</p><button class="close" onclick="closePage('clanPage')">BACK</button></div></div>
-<div id="invPage" class="page"><div class="pbox"><h2>🎒 INVENTORY</h2><p>Outfits: 128 • Helmets: 45<br>Gun Skins: M416 Glacier - Max<br>Vehicles: Sports Car - Golden<br>Materials: <span id="mat2">15</span></p><button class="close" onclick="closePage('invPage')">BACK</button></div></div>
-
-<!-- HIDDEN SETTINGS - DP PE 5 CLICK -->
-<div id="set"><div class="modal"><h3>⚙️ Hidden Settings - Admin Panel</h3><p>Ye sirf tumhe dikhega, kisi aur ko nahi!</p>
-<label>Player Name</label><input id="inName" value="AR • Pakistan YT">
-<div class="grid2"><div><label>UC Add Karo</label><input type="number" id="inputUc" value="10000"></div><div><label>Materials</label><input type="number" id="inputMat" value="50"></div></div>
-<label>UC Timer - Kab Aaye?</label><select id="inputTimer"><option value="10">10 Sec - Test</option><option value="30">30 Sec</option><option value="60" selected>1 Min</option><option value="120">2 Min</option><option value="300">5 Min</option></select>
-<label>Gun Skin</label><select id="gunSkin"><option>M416 - Glacier (Max)</option><option>AKM - Golden</option><option>JS9 - Champion</option><option>AWM - Arctic</option></select>
-<label>Outfit / Dress</label><select id="dressSkin"><option>Mythic - Black Cape + Golden (Ye Wala)</option><option>Pharaoh Suit</option><option>Black/Red Tracksuit</option><option>Arctic Suit</option></select>
-<label>Car Skin</label><select><option>Sports Car - Golden</option><option>Lamborghini - Blue</option><option>Bugatti - Black</option></select>
-<label>Rank</label><select><option>Ace Dominator</option><option>Conqueror</option><option>Crown</option><option>Diamond</option></select>
-<div class="btns"><button class="cancel" onclick="document.getElementById('set').style.display='none'">Cancel</button><button class="save" onclick="saveSettings()">Apply & Start Timer</button></div></div></div>
+<div id="set"><div class="modal"><h3>⚙️ Hidden Settings - DP pe 5 Click</h3><label>UC Kitni?</label><input type="number" id="inputUc" value="10000"><label>Timer</label><select id="inputTimer"><option value="10">10 Sec - Test</option><option value="30">30 Sec</option><option value="60" selected>1 Min</option><option value="120">2 Min</option></select><label>Materials</label><input type="number" id="inputMat" value="50"><div class="btns"><button class="cancel" onclick="document.getElementById('set').style.display='none'">Cancel</button><button class="save" onclick="saveSettings()">Apply</button></div></div></div>
 <script>
-// DP 5 CLICK = SETTINGS
-let c=0,last=0;document.getElementById('dpClick').addEventListener('click',()=>{let n=Date.now();if(n-last>1500)c=0;last=n;c++;if(c>=5){c=0;document.getElementById('set').style.display='flex';document.getElementById('hint').style.display='none'}});
-function openPage(id){document.getElementById(id).style.display='block'}function closePage(id){document.getElementById(id).style.display='none'}
-// CHARACTER ROTATE - FRONT / BACK
-let ry=0,down=false,sx=0,spin=document.getElementById('spinner'),stage=document.getElementById('stage');
-function apply(){spin.style.transform='rotateY('+ry+'deg)'}
-stage.addEventListener('touchstart',e=>{down=true;sx=e.touches[0].clientX},{passive:true});
-stage.addEventListener('touchmove',e=>{if(!down)return;let dx=e.touches[0].clientX-sx;sx=e.touches[0].clientX;ry+=dx*0.9;apply()},{passive:true});
-stage.addEventListener('touchend',()=>down=false);
-stage.addEventListener('mousedown',e=>{down=true;sx=e.clientX});
-window.addEventListener('mousemove',e=>{if(!down)return;let dx=e.clientX-sx;sx=e.clientX;ry+=dx*0.9;apply()});
-window.addEventListener('mouseup',()=>down=false);
-stage.addEventListener('click',()=>{let t=ry+360;let iv=setInterval(()=>{ry+=14;apply();if(ry>=t)clearInterval(iv)},16)});
-// UC TIMER + SAVE
-function saveSettings(){
-let uc=parseInt(document.getElementById('inputUc').value)||0;
-let delay=parseInt(document.getElementById('inputTimer').value)||60;
-let mat=parseInt(document.getElementById('inputMat').value)||10;
-let name=document.getElementById('inName').value||'AR • Pakistan YT';
-document.getElementById('matDisplay').textContent=mat;
-document.getElementById('mat2').textContent=mat;
-document.querySelector('.pName').innerHTML=name+' <span>YT</span>';
-document.getElementById('set').style.display='none';
-let rem=delay;let b=document.getElementById('timer');b.style.display='block';document.getElementById('timeLeft').textContent=rem;
-let iv=setInterval(()=>{rem--;document.getElementById('timeLeft').textContent=rem;if(rem<=0){clearInterval(iv);b.style.display='none';document.getElementById('ucDisplay').textContent=(103666+uc).toLocaleString();let p=document.getElementById('ucPop');p.textContent='+'+uc.toLocaleString()+' UC Aayi! 🔥';p.style.display='block';setTimeout(()=>p.style.display='none',4000);}},1000);
-}
-setTimeout(()=>{document.getElementById('hint').style.display='none'},6000);
+let c=0,l=0;document.getElementById('dpClick').addEventListener('click',()=>{let n=Date.now();if(n-l>1500)c=0;l=n;c++;if(c>=5){c=0;document.getElementById('set').style.display='flex'}});
+function saveSettings(){let uc=parseInt(document.getElementById('inputUc').value)||0;let delay=parseInt(document.getElementById('inputTimer').value)||60;let mat=parseInt(document.getElementById('inputMat').value)||10;document.getElementById('matDisplay').textContent=mat;document.getElementById('set').style.display='none';let rem=delay;let b=document.getElementById('timer');b.style.display='block';document.getElementById('timeLeft').textContent=rem;let iv=setInterval(()=>{rem--;document.getElementById('timeLeft').textContent=rem;if(rem<=0){clearInterval(iv);b.style.display='none';document.getElementById('ucDisplay').textContent=(103666+uc).toLocaleString();let p=document.getElementById('ucPop');p.textContent='+'+uc.toLocaleString()+' UC 💰';p.style.display='block';setTimeout(()=>p.style.display='none',4000);}},1000);}
 </script></body></html>
