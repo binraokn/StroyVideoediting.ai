@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AniTruth Pro - AI 2D Story Studio</title>
+    <link href="https://googleapis.com" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #090d16;
+            --card: #111827;
+            --border: #1f2937;
+            --primary: #3b82f6;
+            --accent: #8b5cf6;
+            --success: #10b981;
+            --text: #f3f4f6;
+            --muted: #9ca3af;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg); color: var(--text); padding: 15px; }
+        .container { max-width: 850px; margin: auto; }
+        
+        /* Header */
+        header { text-align: center; padding: 25px 0; border-bottom: 1px solid var(--border); margin-bottom: 25px; }
+        header h1 { font-size: 26px; background: linear-gradient(90deg, #60a5fa, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        header p { color: var(--muted); font-size: 13px; margin-top: 5px; }
+
+        /* Studio Box */
+        .studio-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .step-badge { display: inline-block; background: rgba(59, 130, 246, 0.15); color: #60a5fa; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; margin-bottom: 8px; }
+        
+        label { display: block; font-size: 13px; color: #d1d5db; margin-bottom: 6px; font-weight: 600; }
+        input, textarea, select { width: 100%; background: #1f2937; border: 1px solid #374151; color: white; padding: 12px; border-radius: 10px; font-size: 14px; margin-bottom: 15px; outline: none; }
+        input:focus, textarea:focus { border-color: var(--primary); }
+
+        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; }
+        button { flex: 1; padding: 14px; border: none; border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer; transition: 0.3s; color: white; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--accent)); }
+        .btn-demo { background: #374151; border: 1px solid #4b5563; }
+        button:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        /* Step-by-Step Progress Tracker */
+        .progress-tracker { display: none; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-top: 20px; }
+        .step-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; font-size: 14px; color: var(--muted); }
+        .step-row.active { color: #60a5fa; font-weight: 600; }
+        .step-row.done { color: var(--success); }
+        .dot { width: 12px; height: 12px; border-radius: 50%; background: #374151; }
+        .step-row.active .dot { background: #60a5fa; box-shadow: 0 0 10px #60a5fa; }
+        .step-row.done .dot { background: var(--success); }
+
+        /* Video Player Preview Mode */
+        #cinemaPlayer { display: none; background: #000; border-radius: 16px; overflow: hidden; margin-top: 25px; border: 2px solid var(--accent); position: relative; }
+        .screen-wrap { position: relative; width: 100%; height: 380px; overflow: hidden; }
+        #playerImg { width: 100%; height: 100%; object-fit: cover; transition: transform 8s ease-out; }
+        .zoom-effect { transform: scale(1.15); }
+        .subtitle-overlay { position: absolute; bottom: 20px; left: 5%; right: 5%; background: rgba(0,0,0,0.78); padding: 12px 16px; border-radius: 10px; text-align: center; font-size: 15px; border-left: 4px solid var(--accent); }
+        .player-bar { background: #111827; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; }
+
+        /* Scene Cards */
+        .scenes-grid { margin-top: 25px; display: flex; flex-direction: column; gap: 20px; }
+        .scene-item { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+        .scene-header { background: #1f2937; padding: 10px 15px; font-size: 13px; font-weight: 600; display: flex; justify-content: space-between; }
+        .scene-img { width: 100%; max-height: 360px; object-fit: cover; display: block; background: #0f172a; }
+        .scene-body { padding: 15px; }
+        .script-text { font-size: 14px; line-height: 1.6; color: #e5e7eb; margin-bottom: 12px; }
+        .prompt-box { background: #090d16; padding: 10px; border-radius: 8px; font-size: 11px; color: var(--muted); margin-bottom: 12px; border: 1px dashed #374151; }
+        .action-btns { display: flex; gap: 10px; }
+        .btn-sm { padding: 10px; font-size: 13px; border-radius: 8px; text-align: center; text-decoration: none; color: white; font-weight: 600; flex: 1; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🎬 AniTruth AI Story Studio</h1>
+        <p>Script • 2D Dark Animation Art • AI Voiceover • Auto Video Preview</p>
+    </header>
+
+    <!-- Input Studio -->
+    <div class="studio-card">
+        <span class="step-badge">STEP 1: SETUP & TOPIC</span>
+        
+        <label>🔑 Gemini API Key (Optional - Demo ke liye khali chhod dein):</label>
+        <input type="password" id="apiKey" placeholder="AIzaSy... (Google AI Studio se free key dalein)">
+
+        <label>🎨 Animation Art Style:</label>
+        <select id="artStyle">
+            <option value="2d dark graphic novel comic art style, dramatic shadows, moody lighting, cinematic">Dark Comic / Investigative 2D Style (Like AniTruth)</option>
+            <option value="2d dark anime style, gritty atmosphere, glowing highlights, detailed background">Dark Gritty Anime Style</option>
+            <option value="2d noir detective illustration, rain, neon reflections, dramatic shadows">Noir Mystery 2D Art</option>
+        </select>
+
+        <label>📝 Apni Kahani ka Topic Likhein:</label>
+        <textarea id="topic" rows="3" placeholder="Misal: Ek sahafi jo raat ke andhere mein ek band factory ke raaz be-naqab karta hai..."></textarea>
+
+        <div class="btn-group">
+            <button class="btn-primary" onclick="startGeneration(false)">🚀 AI Story Banayein (With Key)</button>
+            <button class="btn-demo" onclick="startGeneration(true)">⚡ Free Sample Demo Chalayein</button>
+        </div>
+    </div>
+
+    <!-- Step-by-Step Progress -->
+    <div class="progress-tracker" id="tracker">
+        <div class="step-row" id="st1"><div class="dot"></div> Step 1: Kahani aur Scenes ka Script likha ja raha hai...</div>
+        <div class="step-row" id="st2"><div class="dot"></div> Step 2: 2D Dark Animation Illustrations tayyar ho rahi hain...</div>
+        <div class="step-row" id="st3"><div class="dot"></div> Step 3: Voiceover aur Cinema Player sync ho raha hai...</div>
+    </div>
+
+    <!-- Auto Cinema Player -->
+    <div id="cinemaPlayer">
+        <div class="screen-wrap">
+            <img id="playerImg" src="" alt="Animation Frame">
+            <div class="subtitle-overlay" id="playerSub">Kahani shuru ho rahi hai...</div>
+        </div>
+        <div class="player-bar">
+            <span id="sceneIndicator" style="font-size:13px; color:#9ca3af;">Scene 1 / 4</span>
+            <button onclick="playFullStory()" style="flex:none; padding:8px 18px; background:var(--success); font-size:13px;">▶️ Play Full Video Story</button>
+        </div>
+    </div>
+
+    <!-- Individual Scene Breakdown -->
+    <div class="scenes-grid" id="scenesOutput"></div>
+</div>
+
+<script>
+let currentScenes = [];
+let isPlaying = false;
+
+const sampleStory = [
+    {
+        narration: "Raat ke do baj rahe thay, aur poora shehar gehri neend mein dooba hua tha. Lekin Inspector Zafar ki aankhon mein neend ka naam o nishan nahi tha.",
+        imagePrompt: "A serious bearded Pakistani detective in dark jacket holding a secret file in a rainy dark street at night, police car lights in background"
+    },
+    {
+        narration: "Uske haath mein woh khufiya file thi jo is shehar ke sab se bade mafia ka chehra be-naqab karne wali thi.",
+        imagePrompt: "Close up of hands holding a stamped confidential paper document under a flickering streetlamp, dramatic shadows, dark thriller mood"
+    },
+    {
+        narration: "Achanak andheri gali ke mod par gaadiyon ki headlights chamki, aur charon taraf se goliyaan chalne lagin!",
+        imagePrompt: "Masked gunmen firing rifles in a narrow dark alley, sparks flying, intense action scene, dramatic orange explosions"
+    },
+    {
+        narration: "Magar Zafar ne haar nahi maani. Usne saboot media tak pohancha diye, aur subah hote hi poora nizam hil kar reh gaya.",
+        imagePrompt: "Breaking news broadcast on city screens at dawn, dramatic sunrise over city skyline, victorious investigative mood"
+    }
+];
+
+async function startGeneration(isDemo) {
+    const apiKey = document.getElementById('apiKey').value.trim();
+    const topic = document.getElementById('topic').value.trim();
+    const style = document.getElementById('artStyle').value;
+
+    if (!isDemo && (!apiKey || !topic)) {
+        alert("Agar aapke paas API key nahi hai, toh 'Free Sample Demo Chalayein' button dabayein!");
+        return;
+    }
+
+    // Reset UI
+    document.getElementById('scenesOutput').innerHTML = "";
+    document.getElementById('cinemaPlayer').style.display = "none";
+    const tracker = document.getElementById('tracker');
+    tracker.style.display = "block";
+
+    setStep('st1', 'active');
+    setStep('st2', '');
+    setStep('st3', '');
+
+    try {
+        let scenesData = [];
+
+        if (isDemo) {
+            await sleep(1000);
+            scenesData = sampleStory;
+        } else {
+            const prompt = `Create a dramatic 4-scene 2D animation story in Roman Urdu about: "${topic}".
+
